@@ -1,0 +1,154 @@
+/* --- GERAL E PALETA DE CORES (sem alterações) --- */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --dark-bg: #2c3e50;
+    --light-bg: #f4f6f9;
+    --text-color-dark: #34495e;
+    --text-color-light: #ffffff;
+    --border-color: #dfe6e9;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+/* ... (todo o CSS anterior da home, header, etc., continua aqui) ... */
+
+/* --- Mantendo os estilos anteriores que não foram alterados --- */
+* {margin: 0; padding: 0; box-sizing: border-box;}
+body {font-family: 'Roboto', sans-serif; background-color: var(--light-bg); color: var(--text-color-dark); line-height: 1.7;}
+.container {max-width: 1100px; margin: 0 auto; padding: 0 20px;}
+h1, h2, h3, h4 {color: var(--dark-bg); margin-bottom: 1rem; font-family: 'Playfair Display', serif;}
+@keyframes fadeIn {from { opacity: 0; } to { opacity: 1; }}
+@keyframes slideInUp {from {opacity: 0; transform: translateY(30px);} to {opacity: 1; transform: translateY(0);}}
+.animate-on-load {opacity: 0; animation: slideInUp 0.6s ease-out forwards;}
+header {background-color: var(--dark-bg); color: var(--text-color-light); padding: 1rem 0; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); position: sticky; top: 0; z-index: 1000;}
+header .container {display: flex; justify-content: space-between; align-items: center;}
+header h1 {font-family: 'Roboto', sans-serif; font-size: 1.8rem;}
+header h1 a {color: var(--text-color-light); text-decoration: none; font-weight: 700;}
+header nav ul {list-style: none; display: flex;}
+header nav ul li a {color: var(--text-color-light); text-decoration: none; margin: 0 15px; font-weight: 400; transition: color 0.3s ease; padding-bottom: 5px; border-bottom: 2px solid transparent;}
+header nav ul li a:hover {color: var(--primary-color); border-bottom-color: var(--primary-color);}
+.page {display: none; padding: 40px 0; animation: fadeIn 0.5s ease-in-out;}
+.page.active {display: block;}
+.hero {text-align: center; padding: 60px 20px; margin-bottom: 40px;}
+.hero h2 {font-size: 3rem; margin-bottom: 1rem;}
+.hero p {font-size: 1.2rem; color: #555; max-width: 600px; margin: 0 auto 2rem auto;}
+.cta-button {background-color: var(--primary-color); color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: background-color 0.3s ease, transform 0.3s ease; display: inline-block;}
+.cta-button:hover {background-color: var(--secondary-color); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.15);}
+.team-container, .team-member, .team-member img { /* Estilos da página Sobre mantidos */ }
+.team-container {display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center;}
+.team-member {background: #fff; padding: 20px; border-radius: 8px; box-shadow: var(--shadow); width: 250px; transition: transform 0.3s ease, box-shadow 0.3s ease;}
+.team-member:hover {transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);}
+.team-member img {width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 4px solid var(--primary-color);}
+.card {background: #fff; padding: 25px; border-radius: 8px; box-shadow: var(--shadow); border: 1px solid var(--border-color);}
+.hidden {display: none !important;}
+
+
+/* --- FORMULÁRIOS (COM ADIÇÕES) --- */
+form {max-width: 500px; margin: 0 auto;}
+.form-group {margin-bottom: 1.2rem;}
+.form-group label {display: block; margin-bottom: 5px; font-weight: 700;}
+input[type="text"], input[type="password"], input[type="number"], textarea, input[type="file"] {width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 1rem; font-family: 'Roboto', sans-serif;}
+input:focus, textarea:focus {outline: none; border-color: var(--primary-color); box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);}
+button {display: inline-block; width: 100%; padding: 12px; border: none; border-radius: 5px; background-color: var(--primary-color); color: var(--text-color-light); font-size: 1rem; font-weight: 700; cursor: pointer; transition: background-color 0.3s ease;}
+button:hover {background-color: var(--secondary-color);}
+.error-message {color: var(--error-color); margin-top: 10px; text-align: center; font-weight: bold; min-height: 20px;}
+
+/* NOVO: Estilo para o preview da imagem no formulário */
+.cover-preview-img {
+    margin-top: 10px;
+    max-width: 100px;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+
+/* --- PÁGINA CRUD (COM ATUALIZAÇÕES) --- */
+.crud-container {display: grid; grid-template-columns: 400px 1fr; gap: 30px;}
+.list-section h3 { padding-left: 10px; }
+
+/* NOVO: Estilo para a grade de livros que substitui a tabela */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.book-display-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.book-display-cover {
+    width: 100%;
+    height: 200px; /* Altura fixa para a área da imagem */
+    background-color: #eee;
+}
+
+.book-display-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+}
+
+.book-display-info {
+    padding: 15px;
+    flex-grow: 1; /* Faz esta área ocupar o espaço restante */
+    display: flex;
+    flex-direction: column;
+}
+
+.book-display-info h4 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.book-display-info .author-year {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.book-display-synopsis {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Empurra as ações para o final */
+}
+
+.book-display-actions {
+    margin-top: auto; /* Empurra para o final do card */
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+
+.action-btn {border: none; padding: 8px 12px; margin-left: 5px; border-radius: 4px; cursor: pointer; color: white; font-size: 0.9rem;}
+.edit-btn { background-color: var(--primary-color); }
+.edit-btn:hover { background-color: var(--secondary-color); }
+.delete-btn { background-color: var(--error-color); }
+.delete-btn:hover { background-color: #c0392b; }
+#cancel-button {background-color: var(--text-color-dark); margin-top: 10px;}
+#cancel-button:hover {background-color: #555;}
+
+/* --- FOOTER (sem alterações) --- */
+footer {background-color: var(--dark-bg); color: var(--text-color-light); text-align: center; padding: 1.5rem 0; margin-top: 40px;}
+
+/* --- RESPONSIVIDADE (com atualizações) --- */
+@media (max-width: 992px) {
+    .crud-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    header .container {flex-direction: column;}
+    header nav ul {margin-top: 10px;}
+    .hero h2 {font-size: 2.5rem;}
+}
