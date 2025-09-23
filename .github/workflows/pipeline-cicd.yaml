@@ -1,0 +1,63 @@
+name: Terraform AWS Academy Deploy with Lambda
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+
+jobs:
+  terraform-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.5.0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: us-east-1
+
+    - name: Build Node.js Lambda
+      run: |
+        cd src/lambda/nodejs
+        npm install --production
+        cd ../../../
+
+    - name: Terraform Init
+      working-directory: src/terraform
+      run: terraform init
+
+    - name: Terraform Validate
+      working-directory: src/terraform
+      run: terraform validate
+
+    - name: Terraform Plan
+      working-directory: src/terraform
+      run: terraform plan -var-file=tfvars/development.tfvars -out=tfplan
+
+    - name: Terraform Apply
+      if: github.event_name == 'push'
+      working-directory: src/terraform
+      run: terraform apply -var-file=tfvars/development.tfvars -auto-approve
+
+    - name: Sync Frontend to S3
+      if: github.event_name == 'push'
+      run: |
+        BUCKET_NAME="biblioteca-frontend-development"
+        aws s3 sync src/frontend/ s3://$BUCKET_NAME --delete
+        echo "Frontend synced to bucket: $BUCKET_NAME"
