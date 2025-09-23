@@ -58,6 +58,6 @@ jobs:
     - name: Sync Frontend to S3
       if: github.event_name == 'push'
       run: |
-        BUCKET_NAME="biblioteca-frontend-development-2"
+        BUCKET_NAME="biblioteca-aws-frontend-development"
         aws s3 sync src/frontend/ s3://$BUCKET_NAME --delete
         echo "Frontend synced to bucket: $BUCKET_NAME"
