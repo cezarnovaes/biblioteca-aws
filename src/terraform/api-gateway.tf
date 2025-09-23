@@ -101,15 +101,29 @@ resource "aws_apigatewayv2_route" "nodejs_post" {
 # Rotas específicas do sistema da padaria
 resource "aws_apigatewayv2_route" "produtos_get" {
   api_id    = aws_apigatewayv2_api.biblioteca_api.id
-  route_key = "GET /produtos"
+  route_key = "GET /livros"
   target    = "integrations/${aws_apigatewayv2_integration.python_lambda.id}"
 }
 
 resource "aws_apigatewayv2_route" "pedidos_post" {
   api_id    = aws_apigatewayv2_api.biblioteca_api.id
-  route_key = "POST /pedidos"
+  route_key = "POST /livros"
   target    = "integrations/${aws_apigatewayv2_integration.nodejs_lambda.id}"
 }
+
+resource "aws_apigatewayv2_route" "pedidos_post" {
+  api_id    = aws_apigatewayv2_api.biblioteca_api.id
+  route_key = "PUT /livros"
+  target    = "integrations/${aws_apigatewayv2_integration.nodejs_lambda.id}"
+}
+
+
+resource "aws_apigatewayv2_route" "pedidos_post" {
+  api_id    = aws_apigatewayv2_api.biblioteca_api.id
+  route_key = "DELETE /livros"
+  target    = "integrations/${aws_apigatewayv2_integration.nodejs_lambda.id}"
+}
+
 
 # ===================================
 # LAMBDA PERMISSIONS
