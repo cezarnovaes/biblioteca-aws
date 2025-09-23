@@ -1,16 +1,14 @@
 variable "aws_region" {
-  description = "AWS region"
+  description = "AWS region to deploy resources"
   type        = string
-  default     = "us-east-1"
 }
 
 variable "environment" {
-  description = "Environment"
+  description = "Deployment environment (e.g., dev, prod)"
   type        = string
-  default     = "devops"
 }
 
 variable "project_name" {
-  description = "biblioteca"
+  description = "Name of the project"
   type        = string
 }
