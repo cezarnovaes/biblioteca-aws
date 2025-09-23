@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     # Substitua pelos outputs do bootstrap
-    bucket         = "biblioteca-terraform"
+    bucket         = "biblioteca-terraform2"
     key            = "example-aws-terraform-template/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "livros-lock-state"
