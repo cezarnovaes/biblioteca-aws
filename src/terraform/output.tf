@@ -50,3 +50,13 @@ output "account_id" {
   description = "Account ID sendo utilizada"
   value       = data.aws_caller_identity.current.account_id
 }
+
+output "dynamodb_table_arn" {
+  description = "ARN da tabela DynamoDB"
+  value       = aws_dynamodb_table.main_table.arn
+}
+
+output "dynamodb_table_name" {
+  description = "Nome da tabela DynamoDB"
+  value       = aws_dynamodb_table.main_table.name
+}

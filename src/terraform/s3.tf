@@ -6,6 +6,9 @@ resource "aws_s3_bucket" "frontend" {
   bucket = "${var.project_name}-frontend-${var.environment}"
 }
 
+resource "aws_s3_bucket" "frontend-bucket-new" {
+  bucket = "${var.project_name}-frontend-bucket-new-${var.environment}"
+}
 
 resource "aws_s3_bucket_website_configuration" "frontend" {
   bucket = aws_s3_bucket.frontend.id

@@ -57,7 +57,7 @@ resource "aws_db_instance" "padaria_postgres" {
   engine_version = "17.4"
   instance_class = "db.t3.micro"
 
-  db_name  = "padariadb"
+  db_name  = "bibliotecabd"
   username = "postgres"
   password = random_password.db_password.result
 
