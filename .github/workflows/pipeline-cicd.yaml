@@ -1,29 +1,34 @@
-name: Terraform AWS Academy Deploy with Lambda
+name: Terraform AWS Academy Deploy with HTTPS Website
 
 on:
   push:
     branches: [ main ]
-    paths:
+    paths: 
       - 'src/**'
 
 jobs:
   terraform-deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-
+      
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.5.0
-
+        
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -31,25 +36,31 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: us-east-1
-
-    - name: Build Node.js Lambda
+        
+    - name: Build Node.js Lambda Functions
       run: |
+        # Build original lambdas
         cd src/lambda/nodejs
         npm install --production
         cd ../../../
-
+        
+        # Build static server lambda
+        cd src/lambda/static-server
+        npm install --production
+        cd ../../../
+        
     - name: Terraform Init
       working-directory: src/terraform
       run: terraform init
-
+      
     - name: Terraform Validate
       working-directory: src/terraform
       run: terraform validate
-
+      
     - name: Terraform Plan
       working-directory: src/terraform
       run: terraform plan -var-file=tfvars/development.tfvars -out=tfplan
-
+      
     - name: Terraform Apply
       if: github.event_name == 'push'
       working-directory: src/terraform
@@ -61,3 +72,31 @@ jobs:
         BUCKET_NAME="biblioteca-aws-frontend-development"
         aws s3 sync src/frontend/ s3://$BUCKET_NAME --delete
         echo "Frontend synced to bucket: $BUCKET_NAME"
+        
+    - name: Get Website URLs
+      if: github.event_name == 'push'
+      working-directory: src/terraform
+      run: |
+        echo "Website URLs:"
+        echo "HTTP:  $(terraform output -raw website_endpoint)"
+        echo "HTTPS: $(terraform output -raw https_website_url)"
+        echo ""
+        echo "Use a URL HTTPS para producao!"
+        
+    - name: Test HTTPS Endpoint
+      if: github.event_name == 'push'
+      working-directory: src/terraform
+      run: |
+        HTTPS_URL=$(terraform output -raw https_website_url)
+        echo "Testando endpoint HTTPS: $HTTPS_URL"
+        
+        sleep 10
+        
+        HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$HTTPS_URL" || echo "000")
+        
+        if [ "$HTTP_STATUS" = "200" ]; then
+          echo "Website HTTPS esta funcionando! Status: $HTTP_STATUS"
+        else
+          echo "Website pode estar ainda deployando. Status: $HTTP_STATUS"
+          echo "Aguarde alguns minutos e teste manualmente."
+        fi
