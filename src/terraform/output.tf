@@ -28,12 +28,12 @@ output "bucket_arn" {
 
 output "python_lambda_function_name" {
   description = "Nome da função Lambda Python"
-  value       = aws_lambda_function.lambda_function.function_name
+  value       = aws_lambda_function.static_server.function_name
 }
 
 output "python_lambda_arn" {
   description = "ARN da função Lambda Python"
-  value       = aws_lambda_function.lambda_function.arn
+  value       = aws_lambda_function.static_server.arn
 }
 
 output "account_id" {
