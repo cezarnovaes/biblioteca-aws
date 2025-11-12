@@ -51,7 +51,7 @@ resource "aws_security_group" "lambda_sg" {
 # LAMBDA FUNCTION - PYTHON (COM PSYCOPG2 LAYER)
 # ===================================
 
-module "python_lambda" {
+module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 4.7"
 

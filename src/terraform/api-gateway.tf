@@ -45,14 +45,14 @@ resource "aws_apigatewayv2_stage" "default" {
 # ===================================
 
 # Integração Python Lambda
-resource "aws_apigatewayv2_integration" "python_lambda" {
+resource "aws_apigatewayv2_integration" "lambda_function" {
   api_id           = aws_apigatewayv2_api.biblioteca_api.id
   integration_type = "AWS_PROXY"
 
   connection_type      = "INTERNET"
   description          = "Python Lambda integration"
   integration_method   = "POST"
-  integration_uri      = aws_lambda_function.python_lambda.invoke_arn
+  integration_uri      = module.lambda_function.lambda_function_invoke_arn
   passthrough_behavior = "WHEN_NO_MATCH"
 }
 
@@ -76,13 +76,13 @@ resource "aws_apigatewayv2_integration" "nodejs_lambda" {
 resource "aws_apigatewayv2_route" "python_get" {
   api_id    = aws_apigatewayv2_api.biblioteca_api.id
   route_key = "GET /python"
-  target    = "integrations/${aws_apigatewayv2_integration.python_lambda.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_function.id}"
 }
 
 resource "aws_apigatewayv2_route" "python_post" {
   api_id    = aws_apigatewayv2_api.biblioteca_api.id
   route_key = "POST /python"
-  target    = "integrations/${aws_apigatewayv2_integration.python_lambda.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_function.id}"
 }
 
 # Rotas Node.js Lambda
@@ -102,7 +102,7 @@ resource "aws_apigatewayv2_route" "nodejs_post" {
 resource "aws_apigatewayv2_route" "livros_get" {
   api_id    = aws_apigatewayv2_api.biblioteca_api.id
   route_key = "GET /livros"
-  target    = "integrations/${aws_apigatewayv2_integration.python_lambda.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_function.id}"
 }
 
 resource "aws_apigatewayv2_route" "livros_post" {
@@ -115,10 +115,10 @@ resource "aws_apigatewayv2_route" "livros_post" {
 # LAMBDA PERMISSIONS
 # ===================================
 
-resource "aws_lambda_permission" "python_lambda_permission" {
+resource "aws_lambda_permission" "lambda_function_permission" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.python_lambda.function_name
+  function_name = module.lambda_function.lambda_function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.biblioteca_api.execution_arn}/*/*"
 }
