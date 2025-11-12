@@ -36,15 +36,15 @@ output "python_lambda_arn" {
   value       = aws_lambda_function.static_server.arn
 }
 
-output "nodejs_lambda_function_name" {
-  description = "Nome da função Lambda Node.js"
-  value       = aws_lambda_function.nodejs_lambda.function_name
-}
+# output "nodejs_lambda_function_name" {
+#   description = "Nome da função Lambda Node.js"
+#   value       = aws_lambda_function.nodejs_lambda.function_name
+# }
 
-output "nodejs_lambda_arn" {
-  description = "ARN da função Lambda Node.js"
-  value       = aws_lambda_function.nodejs_lambda.arn
-}
+# output "nodejs_lambda_arn" {
+#   description = "ARN da função Lambda Node.js"
+#   value       = aws_lambda_function.nodejs_lambda.arn
+# }
 
 output "account_id" {
   description = "Account ID sendo utilizada"
