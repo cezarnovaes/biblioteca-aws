@@ -89,6 +89,46 @@ module "lambda_function" {
 }
 
 # ===================================
+# LAMBDA FUNCTION - NODE.JS
+# ===================================
+
+data "archive_file" "nodejs_lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../lambda/nodejs"
+  output_path = "${path.module}/nodejs_lambda.zip"
+}
+
+resource "aws_lambda_function" "nodejs_lambda" {
+  filename      = data.archive_file.nodejs_lambda_zip.output_path
+  function_name = "${var.project_name}-nodejs-lambda-${var.environment}"
+  role          = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+  handler       = "index.handler"
+  runtime       = "nodejs18.x"
+  timeout       = 30
+
+  source_code_hash = data.archive_file.nodejs_lambda_zip.output_base64sha256
+
+  vpc_config {
+    subnet_ids         = data.aws_subnets.default.ids
+    security_group_ids = [aws_security_group.lambda_sg.id]
+  }
+
+  environment {
+    variables = {
+      ENVIRONMENT  = var.environment
+      PROJECT_NAME = var.project_name
+      DB_HOST      = aws_db_instance.padaria_postgres.endpoint
+      DB_PORT      = tostring(aws_db_instance.padaria_postgres.port)
+      DB_NAME      = aws_db_instance.padaria_postgres.db_name
+      DB_USERNAME  = aws_db_instance.padaria_postgres.username
+      DB_PASSWORD  = random_password.db_password.result
+    }
+  }
+
+  depends_on = [aws_db_instance.padaria_postgres]
+}
+
+# ===================================
 # CLOUDWATCH LOGS
 # ===================================
 
